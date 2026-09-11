@@ -14,23 +14,23 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    Init { path: String },
+    Init { clone_url: String, path: String },
     Status,
-    Create { branch_name: String },
+    Create { branch_name: String, path: String },
 }
 
 fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Command::Init { path } => init(&path),
+        Command::Init { path, clone_url } => init(&clone_url, &path),
         Command::Status => status(),
-        Command::Create { branch_name } => create_worktree(&branch_name),
+        Command::Create { branch_name, path } => create_worktree(&branch_name, &path),
     }
 }
 
-fn create_worktree(branch_name: &str) {
-    let workdir_path = path::Path::new(branch_name);
+fn create_worktree(branch_name: &str, path: &str) {
+    let workdir_path = path::Path::new(path);
 
     if workdir_path.exists() {
         panic!("can't create worktree, as file/directory already exists");
@@ -45,7 +45,7 @@ fn create_worktree(branch_name: &str) {
         .write(true)
         .open(".cow")
         .expect("gitcow hasn't been initialized");
-    writeln!(cowfile, "?{branch_name}").expect("couldn't register cowrepo");
+    writeln!(cowfile, "?{branch_name} {path}").expect("couldn't register cowrepo");
 }
 
 fn status() {
@@ -58,10 +58,10 @@ fn status() {
     }
 }
 
-fn init(path: &str) {
+fn init(clone_url: &str, path: &str) {
     let mut file = File::create_new(".cow").expect("gitcow already initialized");
 
     writeln!(file, "!{path}").unwrap();
 
-    println!("git clone to {path}");
+    println!("git clone {clone_url} {path}");
 }
