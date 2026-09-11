@@ -32,4 +32,12 @@ cd feature-branch
 echo "Contributors get apply pie." >> README.md
 # now, that we've made a modification to a file from the etalon,
 # a copy of the README.md file is created in feature-branch/ and gets updated. 
+#
+# gitcow/
+#     etalon/
+#         README.md
+#         LICENSE
+#     feature-branch/
+#         README.md
+ 
 ```
