@@ -17,6 +17,8 @@ enum Command {
     Init { clone_url: String, path: String },
     Status,
     Create { branch_name: String, path: String },
+    Remove { path: String },
+    Bail,
 }
 
 fn main() {
@@ -26,6 +28,8 @@ fn main() {
         Command::Init { path, clone_url } => init(&clone_url, &path),
         Command::Status => status(),
         Command::Create { branch_name, path } => create_worktree(&branch_name, &path),
+        Command::Remove { path } => todo!(),
+        Command::Bail => todo!(),
     }
 }
 
